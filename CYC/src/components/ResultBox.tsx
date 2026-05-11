@@ -11,7 +11,8 @@ const ResultBox = ({ items }: { items: DataRow[] }) => {
       {items.map((item, index) => (
         <div
           key={index}
-          className={`m-2 p-3 mt-3 rounded-2xl font-bold text-white text-center uppercase ${item.OF === 1 ? "bg-red-500" : "bg-green-600"}`}
+          className={`m-2 p-3 mt-3 rounded-2xl font-bold text-white text-center uppercase ${item.Trasa === "KRX0" ? "bg-red-500" : item.OF == 1 ? "bg-orange-600" : "bg-green-600"}`}
+          // className={`m-2 p-3 mt-3 rounded-2xl font-bold text-white text-center uppercase ${item.OF === 1 ? "bg-red-500" : "bg-green-600"}`}
         >
           <p>{item.City}</p>
           <p>

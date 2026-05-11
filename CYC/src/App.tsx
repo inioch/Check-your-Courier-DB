@@ -1,10 +1,9 @@
 import ResultBox from "./components/ResultBox";
 import { supabase } from "../utils/supabase";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // do zrobienia
-// klikanie poza obszar
-
+// zrobic mrozruznienie miedzy ofen a +1 zolty kolor albo pomarancz
 interface DataRow {
   Postcode: string;
   City: string;
@@ -16,6 +15,8 @@ function App() {
   const [results, setResults] = useState<DataRow[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [hasSearched, setHasSearched] = useState<boolean>(false);
+
+  const inputRef = useRef(null);
 
   async function getData(searchingValue: string) {
     setHasSearched(false);
@@ -46,6 +47,8 @@ function App() {
     }
 
     getData(valueToSearch);
+    inputRef.current.focus();
+    inputRef.current.select();
   };
   const parseDirectionalCode = (directionalCode: string) => {
     if (!directionalCode) return "";
@@ -53,6 +56,23 @@ function App() {
     const match = directionalCode.match(/\d{2}-\d{3}|\d{5}/);
     return match ? match[0] : "";
   };
+  const handleClickOutside = (event) => {
+    if (inputRef.current && !inputRef.current.contains(event.target)) {
+      // Ustawiamy focus na polu input
+      inputRef.current.focus();
+      // Zaznaczamy zawartość pola input
+      inputRef.current.select();
+    }
+  };
+  useEffect(() => {
+    // Dodajemy event listener do elementu body
+    document.body.addEventListener("click", handleClickOutside);
+
+    // Return funkcji usuwającej event listenera
+    return () => {
+      document.body.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div
@@ -75,6 +95,7 @@ function App() {
           <input
             id="postcode"
             type="text"
+            ref={inputRef}
             value={inputValue}
             className="bg-white w-64 p-3 font-bold text-center text-2xl rounded-2xl shadow-md outline-none focus:ring-4 focus:ring-amber-500/50"
             onChange={(e) => {
@@ -95,7 +116,7 @@ function App() {
         {results.length > 0 ? (
           <ResultBox items={results} />
         ) : hasSearched ? (
-          <div className="text-black w w-full text-center  mt-5 font-bold text-3xl border-t-2 border-t-white">
+          <div className="text-black w w-full text-center p-4 mt-5 font-bold text-3xl border-t-2 border-t-white">
             Brak wyników dla podanego kodu!
           </div>
         ) : (
