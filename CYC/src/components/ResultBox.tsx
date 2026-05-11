@@ -1,4 +1,11 @@
-const ResultBox = ({ items }) => {
+interface DataRow {
+  Postcode: string;
+  City: string;
+  Trasa: string;
+  OF: number;
+}
+
+const ResultBox = ({ items }: { items: DataRow[] }) => {
   return (
     <div className="flex w-full md-w-md justify-center flex-wrap border-t-2 border-t-white">
       {items.map((item, index) => (
