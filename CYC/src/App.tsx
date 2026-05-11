@@ -16,7 +16,7 @@ function App() {
   const [inputValue, setInputValue] = useState("");
   const [hasSearched, setHasSearched] = useState<boolean>(false);
 
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   async function getData(searchingValue: string) {
     setHasSearched(false);
@@ -47,8 +47,8 @@ function App() {
     }
 
     getData(valueToSearch);
-    inputRef.current.focus();
-    inputRef.current.select();
+    inputRef.current?.focus();
+    inputRef.current?.select();
   };
   const parseDirectionalCode = (directionalCode: string) => {
     if (!directionalCode) return "";
@@ -56,12 +56,12 @@ function App() {
     const match = directionalCode.match(/\d{2}-\d{3}|\d{5}/);
     return match ? match[0] : "";
   };
-  const handleClickOutside = (event) => {
-    if (inputRef.current && !inputRef.current.contains(event.target)) {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
       // Ustawiamy focus na polu input
-      inputRef.current.focus();
+      inputRef.current?.focus();
       // Zaznaczamy zawartość pola input
-      inputRef.current.select();
+      inputRef.current?.select();
     }
   };
   useEffect(() => {
